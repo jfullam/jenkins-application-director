@@ -19,18 +19,29 @@ public class ApplicationDirectorClientManager {
 		
 		try {
 			initializeRestProvider(appDirBaseURI, userName, password);
+			initializeApplicationDirectorClient();
+			applicationDirectorClient.setRestProvider(appDirRestProvider);
 		} catch (Throwable t) {
 			throw new ApplicationDirectorRestRuntimeException(t);
 		} 
 		
 	}
+	
+	public static ApplicationDirectorClient applicationDirectorClient() {
+		return applicationDirectorClient;
+	}
 
-	private static synchronized void initializeRestProvider(String appDirBaseURI,
+	private static synchronized void initializeApplicationDirectorClient() {
+		if (applicationDirectorClient == null) {
+			applicationDirectorClient = new ApplicationDirectorRestClient();
+		}
+	}
+
+	private static void initializeRestProvider(String appDirBaseURI,
 			String userName, String password) throws KeyManagementException, NoSuchAlgorithmException {
 		
-		if (appDirRestProvider == null) {
 			appDirRestProvider = new DefaultApplicationDirectorRestProvider(appDirBaseURI, userName, password);
-		}
+
 	}
 
 }

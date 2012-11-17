@@ -189,5 +189,20 @@ public class DefaultApplicationDirectorRestProvider implements ApplicationDirect
 	}
 
 
+	public void setUser(String user) {
+		this.user = user;
+	}
+
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+
+	public void setHttpClient(DefaultHttpClient httpClient) {
+		this.httpClient = httpClient;
+	}
+
+
 
 }

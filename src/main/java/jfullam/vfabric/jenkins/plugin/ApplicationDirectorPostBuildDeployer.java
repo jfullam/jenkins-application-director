@@ -18,7 +18,6 @@ import net.sf.json.JSONObject;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.StaplerRequest;
 
-
 /**
  * @author Jonathan Fullam
  */
@@ -43,16 +42,23 @@ public class ApplicationDirectorPostBuildDeployer extends BuildWrapper {
 			public boolean tearDown(final AbstractBuild build,
 					final BuildListener listener) throws IOException,
 					InterruptedException {
-				
+
 				listener.getLogger().println("AppName:  " + appName);
-				listener.getLogger().println("DeploymentProfile:  " + deploymentProfile);
-				listener.getLogger().println("base uri:  " + getDescriptor().getAppDirBaseURI());
-				listener.getLogger().println("user:  " + getDescriptor().getUserName());
-				listener.getLogger().println("last deployment:  " + getDescriptor().getLastDeployment());
-				 
-				 applicationDirector.tearDown(appName, deploymentProfile);
-				 applicationDirector.scheduleDeployment(appName, deploymentProfile);
+				listener.getLogger().println(
+						"DeploymentProfile:  " + deploymentProfile);
+				listener.getLogger().println(
+						"base uri:  " + getDescriptor().getAppDirBaseURI());
+				listener.getLogger().println(
+						"user:  " + getDescriptor().getUserName());
+				listener.getLogger().println(
+						"last deployment:  "
+								+ getDescriptor().getLastDeployment());
 				
+				applicationDirector = ApplicationDirectorClientManager.applicationDirectorClient();
+				applicationDirector.tearDown(appName, deploymentProfile);
+				applicationDirector.scheduleDeployment(appName,
+						deploymentProfile);
+
 				saveLastDeploymentId(String.valueOf(System.currentTimeMillis()));
 				return true;
 			}
@@ -73,11 +79,10 @@ public class ApplicationDirectorPostBuildDeployer extends BuildWrapper {
 	@Extension
 	public static class Descriptor extends BuildWrapperDescriptor {
 
-
 		private String appDirBaseURI;
 		private String userName;
 		private String password;
-		
+
 		private String lastDeployment;
 
 		@Override
@@ -93,12 +98,14 @@ public class ApplicationDirectorPostBuildDeployer extends BuildWrapper {
 		@Override
 		public boolean configure(StaplerRequest req, JSONObject formData)
 				throws FormException {
-			
+
 			appDirBaseURI = formData.getString("appDirBaseURI");
 			userName = formData.getString("userName");
 			password = formData.getString("password");
-			ApplicationDirectorClientManager.configureApplicationDirectorClient(appDirBaseURI, userName, password);
-	
+			ApplicationDirectorClientManager
+					.configureApplicationDirectorClient(appDirBaseURI,
+							userName, password);
+
 			save();
 			return super.configure(req, formData);
 		}
@@ -110,7 +117,6 @@ public class ApplicationDirectorPostBuildDeployer extends BuildWrapper {
 		public String getAppDirBaseURI() {
 			return appDirBaseURI;
 		}
-		
 
 		public String getUserName() {
 			return userName;
@@ -123,7 +129,7 @@ public class ApplicationDirectorPostBuildDeployer extends BuildWrapper {
 		public String getLastDeployment() {
 			return lastDeployment;
 		}
-		
+
 		public void setLastDeployment(String id) {
 			lastDeployment = id;
 			save();
