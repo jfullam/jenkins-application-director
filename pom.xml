@@ -1,107 +1,97 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-  <parent>
-    <groupId>org.jenkins-ci.plugins</groupId>
-    <artifactId>plugin</artifactId>
-    <version>1.466</version><!-- which version of Jenkins is this plugin built against? -->
-  </parent>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>org.jenkins-ci.plugins</groupId>
+		<artifactId>plugin</artifactId>
+		<version>1.466</version><!-- which version of Jenkins is this plugin built 
+			against? -->
+	</parent>
 
-  <groupId>jfullam.vfabric.jenkins</groupId>
-  <artifactId>applicationDirector</artifactId>
-  <version>1.0-SNAPSHOT</version>
-  <packaging>hpi</packaging>
+	<groupId>jfullam.vfabric.jenkins</groupId>
+	<artifactId>applicationDirector</artifactId>
+	<version>1.0-SNAPSHOT</version>
+	<packaging>hpi</packaging>
 
-  <!-- get every artifact through repo.jenkins-ci.org, which proxies all the artifacts that we need -->
-  <repositories>
-    <repository>
-      <id>repo.jenkins-ci.org</id>
-      <url>http://repo.jenkins-ci.org/public/</url>
-    </repository>
-    
+	<!-- get every artifact through repo.jenkins-ci.org, which proxies all the 
+		artifacts that we need -->
+	<repositories>
+		<repository>
+			<id>repo.jenkins-ci.org</id>
+			<url>http://repo.jenkins-ci.org/public/</url>
+		</repository>
+
 		<repository>
 			<id>codehaus-snapshots</id>
 			<url>http://snapshots.repository.codehaus.org</url>
 		</repository>
-		
-		<repository>  
-   <id>maven-restlet</id>  
-   <name>Public online Restlet repository</name>  
-   <url>http://maven.restlet.org</url>  
-</repository>  
 
-  </repositories>
+		<repository>
+			<id>maven-restlet</id>
+			<name>Public online Restlet repository</name>
+			<url>http://maven.restlet.org</url>
+		</repository>
 
-  <pluginRepositories>
-    <pluginRepository>
-      <id>repo.jenkins-ci.org</id>
-      <url>http://repo.jenkins-ci.org/public/</url>
-    </pluginRepository>
-  </pluginRepositories>
-  <build>
-  	<pluginManagement>
-  		<plugins>
+	</repositories>
 
-  		
-  			<!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself.-->
-  			<plugin>
-  				<groupId>org.eclipse.m2e</groupId>
-  				<artifactId>lifecycle-mapping</artifactId>
-  				<version>1.0.0</version>
-  				<configuration>
-  					<lifecycleMappingMetadata>
-  						<pluginExecutions>
-  							<pluginExecution>
-  								<pluginExecutionFilter>
-  									<groupId>
-  										org.jenkins-ci.tools
+	<pluginRepositories>
+		<pluginRepository>
+			<id>repo.jenkins-ci.org</id>
+			<url>http://repo.jenkins-ci.org/public/</url>
+		</pluginRepository>
+	</pluginRepositories>
+	<build>
+		<pluginManagement>
+			<plugins>
+
+
+				<!--This plugin's configuration is used to store Eclipse m2e settings 
+					only. It has no influence on the Maven build itself. -->
+				<plugin>
+					<groupId>org.eclipse.m2e</groupId>
+					<artifactId>lifecycle-mapping</artifactId>
+					<version>1.0.0</version>
+					<configuration>
+						<lifecycleMappingMetadata>
+							<pluginExecutions>
+								<pluginExecution>
+									<pluginExecutionFilter>
+										<groupId>
+											org.jenkins-ci.tools
   									</groupId>
-  									<artifactId>
-  										maven-hpi-plugin
-  									</artifactId>	 
-  									<versionRange>
-  										[1.74,)
+										<artifactId>
+											maven-hpi-plugin
+  									</artifactId>
+										<versionRange>
+											[1.74,)
   									</versionRange>
-  									<goals>
-  										<goal>insert-test</goal>
-  										<goal>
-  											resolve-test-dependencies
+										<goals>
+											<goal>insert-test</goal>
+											<goal>
+												resolve-test-dependencies
   										</goal>
-  										<goal>test-hpl</goal>
-  										<goal>validate</goal>
-  									</goals>
-  								</pluginExecutionFilter>
-  								<action>
-  									<ignore></ignore>
-  								</action>
-  							</pluginExecution>
-  						</pluginExecutions>
-  					</lifecycleMappingMetadata>
-  				</configuration>
-  			</plugin>
-  		</plugins>
-  	</pluginManagement>
-  </build>
-  
-  <dependencies>
-<!-- 		<dependency> -->
-<!-- 			<groupId>org.springframework</groupId> -->
-<!-- 			<artifactId>spring</artifactId> -->
-<!-- 			<version>2.5.6</version> -->
-<!-- 			<type>jar</type> -->
-<!-- 			<scope>compile</scope> -->
-<!-- 		</dependency> -->
-		
-<!-- 		<dependency> -->
-<!-- 			<groupId>org.springframework</groupId> -->
-<!-- 			<artifactId>spring-web</artifactId> -->
-<!-- 			<version>3.1.2.RELEASE</version> -->
-<!-- 			<exclusions> -->
-<!-- 				<exclusion> -->
-<!-- 						<groupId>org.springframework</groupId> -->
-<!-- 						<artifactId>*</artifactId> -->
-<!-- 				</exclusion>	 -->
-<!-- 			</exclusions>		 -->
-<!-- 		</dependency> -->
+											<goal>test-hpl</goal>
+											<goal>validate</goal>
+										</goals>
+									</pluginExecutionFilter>
+									<action>
+										<ignore></ignore>
+									</action>
+								</pluginExecution>
+							</pluginExecutions>
+						</lifecycleMappingMetadata>
+					</configuration>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+	</build>
+
+	<dependencies>
+		<dependency>
+			<groupId>commons-lang</groupId>
+			<artifactId>commons-lang</artifactId>
+			<version>2.4</version>
+		</dependency>
 
 		<dependency>
 			<groupId>org.apache.httpcomponents</groupId>
@@ -144,5 +134,5 @@
 			<scope>runtime</scope>
 		</dependency>
 	</dependencies>
-  
+
 </project>

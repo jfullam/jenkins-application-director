@@ -5,10 +5,10 @@ import jfullam.vfabric.rest.appdir.ApplicationDirectorRestProvider;
 /**
  * @author Jonathan Fullam
  */
-public interface ApplicationDirectorClient {
+public interface ProvisioningService {
 
 	void tearDown(String applicationName, String deploymentProfileName);
-	void scheduleDeployment(String applicationName, String deploymentProfileName);
+	void scheduleDeployment(String deploymentProfielId);
 	void setRestProvider(ApplicationDirectorRestProvider restProvider);
 	
 	

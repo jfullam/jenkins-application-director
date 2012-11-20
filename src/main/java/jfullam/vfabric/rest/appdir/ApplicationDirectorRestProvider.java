@@ -19,5 +19,9 @@ public interface ApplicationDirectorRestProvider {
 	JsonNode getDeployProperties(String deploymentProfileId);
 
 	JsonNode getDeploymentProfiles(String applicationId);
+	
+	JsonNode getDeploymentUpdateProperties(String deploymentId);
+
+	JsonNode updateDeployment(String deployment, JsonNode updateRequest);
 
 }

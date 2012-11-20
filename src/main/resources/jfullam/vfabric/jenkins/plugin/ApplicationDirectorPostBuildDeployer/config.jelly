@@ -3,10 +3,39 @@
     Creates a text field that shows the value of the "name" property.
     When submitted, it will be passed to the corresponding constructor parameter.
   -->
-  <f:entry title="Application Name" field="appName">
-    <f:textbox />
-  </f:entry>
-   <f:entry title="Deployment Profile" field="deploymentProfile">
-    <f:textbox />
-  </f:entry>
+  <form>
+
+
+  <f:radioBlock name="provisionOrUpdate"  title="Provision" value="provision" inline="true" checked="${instance.provisionOrUpdate == 'provision'}">
+
+	   <f:entry title="Application Name" field="application">
+	    <f:select />
+	  </f:entry>
+	   <f:entry title="Deployment Profile" field="deploymentProfile">
+	    <f:select />
+	  </f:entry>
+
+  </f:radioBlock >
+  
+  
+  <f:radioBlock name="provisionOrUpdate" title="Update" value="update" inline="true" checked="${instance.provisionOrUpdate != 'provision'}">
+
+  		<f:entry title="Deployment" field="deployment">
+	    	<f:select />
+	  </f:entry>
+	    <f:entry title="Component" field="component">
+	    	<f:select />
+	  </f:entry>
+	  <f:entry title="Property to Update" field="updateProperty">
+	    	<f:select />
+	  </f:entry>
+	  <f:entry title="Value" field="updatePropertyValue">
+	    	<f:textbox />
+	  </f:entry>
+
+  </f:radioBlock>
+  
+
+  </form>
+
 </j:jelly>
