@@ -1,14 +1,25 @@
 package jfullam.vfabric.jenkins.plugin.rest;
 
-import org.codehaus.jackson.JsonNode;
+import jfullam.vfabric.rest.appdir.RestProvider;
 
-import jfullam.vfabric.rest.appdir.ApplicationDirectorRestProvider;
-
+/**
+ * Application Director service to update existing deployments
+ * 
+ * @author Jonathan Fullam
+ */
 public interface UpdateService {
 	
-	void setRestProvider(ApplicationDirectorRestProvider restProvider);
+	void setRestProvider(RestProvider restProvider);
 	
-	JsonNode updateDeployment(String deployment, String component,
-			String updateProperty, String updatePropertyValue);
+	/**
+	 * @param deployment - deploymentId of an existing deployment
+	 * @param component - component to update
+	 * @param updateProperty - propert to update
+	 * @param updatePropertyValue
+	 * @return ServiceResult - the result of making the call to Application Director
+	 * @throws ServiceException
+	 */
+	ServiceResult updateDeployment(String deployment, String component,
+			String updateProperty, String updatePropertyValue) throws ServiceException;
 
 }

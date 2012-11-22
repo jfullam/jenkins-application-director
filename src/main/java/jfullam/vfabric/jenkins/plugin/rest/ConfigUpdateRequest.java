@@ -8,6 +8,13 @@ import org.codehaus.jackson.JsonGenerationException;
 import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
 
+/**
+ * The request data that is posted to Application Director when
+ * updating an existing deployment.  This will ultimately be
+ * serialized into JSON during a POST request.
+ * 
+ * @author Jonathan Fullam
+ */
 public class ConfigUpdateRequest {
 
 	ArrayList<ProfileNodeComponent> profileNodeComponents;
@@ -25,6 +32,12 @@ public class ConfigUpdateRequest {
 		this.profileNodeComponents = profileNodeComponents;
 	}
 	
+	/**
+	 * Add a component update properties to this request object.  
+	 * 
+	 * @param name - Name of the component to update
+	 * @param properties - List of properties and thier new values
+	 */
 	public void addProfileNodeComponentProperties(String name, HashMap<String,String> properties) {
 		ProfileNodeComponent nodeComponent = new ProfileNodeComponent();
 		nodeComponent.setName(name);

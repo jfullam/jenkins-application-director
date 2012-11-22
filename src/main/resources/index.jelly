@@ -2,5 +2,7 @@
   This view is used to render the installed plugins page.
 -->
 <div>
-  This plugin allows application provisioning and release managment through vFabric Application Director.
+  This plugin allows application provisioning and release management through vFabric Application Director.
+  <br/>
+  This plugin has been tested against Application Director 5.0.
 </div>

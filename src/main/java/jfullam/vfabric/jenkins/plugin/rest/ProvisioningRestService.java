@@ -2,20 +2,23 @@ package jfullam.vfabric.jenkins.plugin.rest;
 
 import java.util.Iterator;
 
-import jfullam.vfabric.rest.appdir.ApplicationDirectorRestProvider;
+import jfullam.vfabric.rest.appdir.RestProvider;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.codehaus.jackson.JsonNode;
 
 /**
+ * Calls the Application Director REST API for scheduling actions such as
+ * deploying / provisioning an application environment
+ * 
  * @author Jonathan Fullam
  */
 public class ProvisioningRestService implements ProvisioningService {
 
-	private ApplicationDirectorRestProvider appDirRestProvider;
+	private RestProvider appDirRestProvider;
 	
-	private static final Log log = LogFactory.getLog(ApplicationDirectorRestProvider.class);
+	private static final Log log = LogFactory.getLog(RestProvider.class);
 
 	/* (non-Javadoc)
 	 * @see com.vmware.demo.vfabric.appdirector.jenkins.ApplicationDirectorClient#tearDown(java.lang.String, java.lang.String)
@@ -23,14 +26,16 @@ public class ProvisioningRestService implements ProvisioningService {
 	 * Looks for a running deployment that matches the application name and profile name.  
 	 * If none are found, nothing happens.
 	 */
-	public void tearDown(String appName, String profileName) {
+	public ServiceResult tearDown(String appName, String profileName) throws ServiceException {
 		
 		String deploymentId = findDeploymentId(appName, profileName);
 		if (deploymentId != null) {
 			log.info("Tearing down deployment with id of " + deploymentId);
-			appDirRestProvider.postTeardown(deploymentId);
+			JsonNode jsonResult = appDirRestProvider.postTeardown(deploymentId);
+			return ServiceResult.parseJson(jsonResult);
 		} else {
 			log.info("Nothing to teardown");
+			return new ServiceResult(true, "There was no existing deployment to teardown.");
 		}
 			
 	}
@@ -45,15 +50,17 @@ public class ProvisioningRestService implements ProvisioningService {
 	 * 
 	 * NOTE:  The application ID used for finding a profile is not necessarily the latest version of the application.
 	 */
-	public void scheduleDeployment(String deploymentProfileId) {
+	public ServiceResult scheduleDeployment(String deploymentProfileId) throws ServiceException {
 		
 		log.info("Scheduling a deployment for profile with id " + deploymentProfileId);
 		JsonNode deployRequest = appDirRestProvider.getDeployProperties(deploymentProfileId);
-		appDirRestProvider.postScheduleDeployment(deploymentProfileId, deployRequest);
+		JsonNode result = 
+			appDirRestProvider.postScheduleDeployment(deploymentProfileId, deployRequest);
+		return ServiceResult.parseJson(result);
 	}
 
 	private String findDeploymentId(String applicationName,
-			String profileName) {
+			String profileName) throws ServiceException {
 		
 		JsonNode jsonDeployments = appDirRestProvider.getDeployments();
 		Iterator<JsonNode> resultsNodes = jsonDeployments.get("results").getElements();
@@ -77,12 +84,12 @@ public class ProvisioningRestService implements ProvisioningService {
 	}
 
 
-	public ApplicationDirectorRestProvider getRestProvider() {
+	public RestProvider getRestProvider() {
 		return appDirRestProvider;
 	}
 
 
-	public void setRestProvider(ApplicationDirectorRestProvider restProvider) {
+	public void setRestProvider(RestProvider restProvider) {
 		this.appDirRestProvider = restProvider;
 	}	
 	

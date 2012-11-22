@@ -16,5 +16,7 @@
       description="The Application Director password">
       <f:password />
     </f:entry>
+      
+  <f:validateButton title="Validate Connection" progress="Validating...." method="validateConnection" with="appDirBaseURI,userName,password"/>
   </f:section>
 </j:jelly>

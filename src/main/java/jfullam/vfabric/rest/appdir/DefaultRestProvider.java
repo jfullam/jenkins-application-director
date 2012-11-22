@@ -12,6 +12,8 @@ import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 
+import jfullam.vfabric.jenkins.plugin.rest.ServiceException;
+
 import org.apache.commons.lang.text.StrSubstitutor;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -36,9 +38,11 @@ import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.map.ObjectMapper;
 
 /**
+ * Uses Apache HttpClient to call the Application Director REST API
+ * 
  * @author Jonathan Fullam
  */
-public class DefaultApplicationDirectorRestProvider implements ApplicationDirectorRestProvider {
+public class DefaultRestProvider implements RestProvider {
 
 	private String baseApi;
 	private String user;
@@ -46,7 +50,7 @@ public class DefaultApplicationDirectorRestProvider implements ApplicationDirect
 	
 	private DefaultHttpClient httpClient;
 	
-	private static final Log log = LogFactory.getLog(DefaultApplicationDirectorRestProvider.class);
+	private static final Log log = LogFactory.getLog(DefaultRestProvider.class);
 	
 	private static final String PAGE = "0";
 	private static final String PAGE_SIZE = "100";
@@ -60,7 +64,7 @@ public class DefaultApplicationDirectorRestProvider implements ApplicationDirect
 	private static final String UPDATE_PROPS_API = "/deployment/${deploymentid}/config-update-props";
 	private static final String UPDATE_DEPLOYMENT_API =  "/deployment/${deploymentid}/action/config-update";
 
-	public DefaultApplicationDirectorRestProvider(String baseApi, String user, String password) throws KeyManagementException, NoSuchAlgorithmException {
+	public DefaultRestProvider(String baseApi, String user, String password) throws KeyManagementException, NoSuchAlgorithmException {
 		this.baseApi = baseApi;
 		this.user = user;
 		this.password = password;
@@ -72,7 +76,7 @@ public class DefaultApplicationDirectorRestProvider implements ApplicationDirect
 	/* (non-Javadoc)
 	 * @see com.vmware.demo.vfabric.management.appdirector.ApplicationDirectorRestAPI#getDeployments()
 	 */
-	public JsonNode getDeployments() {
+	public JsonNode getDeployments() throws ServiceException {
 		
 		HashMap<String,String> pathValueMap = new HashMap<String,String>();
 		pathValueMap.put("page", PAGE);
@@ -89,7 +93,7 @@ public class DefaultApplicationDirectorRestProvider implements ApplicationDirect
 	/* (non-Javadoc)
 	 * @see com.vmware.demo.vfabric.management.appdirector.ApplicationDirectorRestAPI#postTeardown(java.lang.String)
 	 */
-	public JsonNode postTeardown(String deploymentId) {
+	public JsonNode postTeardown(String deploymentId) throws ServiceException {
 		
 		HashMap<String,String> pathValueMap = new HashMap<String,String>();
 		pathValueMap.put("deploymentid", deploymentId);
@@ -104,7 +108,7 @@ public class DefaultApplicationDirectorRestProvider implements ApplicationDirect
 	 * @see com.vmware.demo.vfabric.management.appdirector.ApplicationDirectorRestAPI#postScheduleDeployment(java.lang.String, org.codehaus.jackson.JsonNode)
 	 */
 	public JsonNode postScheduleDeployment(String deploymentProfileId,
-			JsonNode deployRequest) {
+			JsonNode deployRequest) throws ServiceException {
 		
 		HashMap<String,String> pathValueMap = new HashMap<String,String>();
 		pathValueMap.put("deployment-profileid", deploymentProfileId);
@@ -116,7 +120,7 @@ public class DefaultApplicationDirectorRestProvider implements ApplicationDirect
 
 	}
 	
-	public JsonNode getApplications() {
+	public JsonNode getApplications() throws ServiceException {
 		
 		HashMap<String,String> pathValueMap = new HashMap<String,String>();
 		pathValueMap.put("page", PAGE);
@@ -128,7 +132,7 @@ public class DefaultApplicationDirectorRestProvider implements ApplicationDirect
 		return doGet(appsUri);
 	}
 	
-	public JsonNode getDeployProperties(String deploymentProfileId) {
+	public JsonNode getDeployProperties(String deploymentProfileId) throws ServiceException {
 		
 		HashMap<String,String> pathValueMap = new HashMap<String,String>();
 		pathValueMap.put("deployment-profileid", deploymentProfileId);
@@ -140,7 +144,7 @@ public class DefaultApplicationDirectorRestProvider implements ApplicationDirect
 	}
 	
 
-	public JsonNode getDeploymentProfiles(String applicationId) {
+	public JsonNode getDeploymentProfiles(String applicationId) throws ServiceException {
 		
 		HashMap<String,String> pathValueMap = new HashMap<String,String>();
 		pathValueMap.put("page", PAGE);
@@ -155,7 +159,7 @@ public class DefaultApplicationDirectorRestProvider implements ApplicationDirect
 	
 
 	@Override
-	public JsonNode getDeploymentUpdateProperties(String deploymentId) {
+	public JsonNode getDeploymentUpdateProperties(String deploymentId) throws ServiceException {
 		HashMap<String,String> pathValueMap = new HashMap<String,String>();
 		pathValueMap.put("deploymentid", deploymentId);
 		StrSubstitutor pathResolver = new StrSubstitutor(pathValueMap);
@@ -166,7 +170,7 @@ public class DefaultApplicationDirectorRestProvider implements ApplicationDirect
 	}
 	
 	@Override
-	public JsonNode updateDeployment(String deployment, JsonNode updateRequest) {
+	public JsonNode updateDeployment(String deployment, JsonNode updateRequest) throws ServiceException {
 		HashMap<String,String> pathValueMap = new HashMap<String,String>();
 		pathValueMap.put("deploymentid", deployment);
 		StrSubstitutor pathResolver = new StrSubstitutor(pathValueMap);
@@ -179,17 +183,14 @@ public class DefaultApplicationDirectorRestProvider implements ApplicationDirect
 	
 	public static void main(String[] args) {
 		try {
-			DefaultApplicationDirectorRestProvider provider = 
-				new DefaultApplicationDirectorRestProvider("https://10.64.81.24:8443/darwin/api/1.0", "admin", "Passw0rd");
+			DefaultRestProvider provider = 
+				new DefaultRestProvider("https://10.64.81.24:8443/darwin/api/1.0", "admin", "Passw0rd");
 			System.out.println(provider.getDeploymentUpdateProperties("152"));
 			System.out.println(provider.getApplications());
-		} catch (KeyManagementException e) {
+		} catch (Throwable e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} catch (NoSuchAlgorithmException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		} 
 	}
 
 
@@ -207,7 +208,7 @@ public class DefaultApplicationDirectorRestProvider implements ApplicationDirect
 		this.httpClient = httpClient;
 	}
 	
-	private JsonNode doGet(String uri) {
+	private JsonNode doGet(String uri) throws ServiceException {
 		log.debug("Calling " +  uri);
 		HttpGet get = new HttpGet(uri);
 		get.setHeader("Accept", "application/json");
@@ -215,7 +216,7 @@ public class DefaultApplicationDirectorRestProvider implements ApplicationDirect
 		return executeHttpMethod(get);
 	}
 	
-	private JsonNode doPost(String uri, JsonNode postJson) {
+	private JsonNode doPost(String uri, JsonNode postJson) throws ServiceException {
 		log.debug("Calling " + uri + " with entity " + postJson);
 		HttpPost post = new HttpPost(uri);
 		
@@ -231,29 +232,29 @@ public class DefaultApplicationDirectorRestProvider implements ApplicationDirect
 	}
 
 
-	private JsonNode executeHttpMethod(HttpUriRequest httpUriRequest) {
+	private JsonNode executeHttpMethod(HttpUriRequest httpUriRequest) throws ServiceException {
 		HttpResponse response = null;
 		
 		try {
 			response = httpClient.execute(httpUriRequest);
-			HttpEntity entity = response.getEntity();
-			if (entity != null) {
-				ObjectMapper jsonObjectMapper = new ObjectMapper();
-				JsonNode jsonResponseEntity =  jsonObjectMapper.readTree(new InputStreamReader(entity.getContent()));
-				return jsonResponseEntity;
+			if (response.getStatusLine().getStatusCode() == 200) {
+				HttpEntity entity = response.getEntity();
+				if (entity != null) {
+					ObjectMapper jsonObjectMapper = new ObjectMapper();
+					JsonNode jsonResponseEntity =  jsonObjectMapper.readTree(new InputStreamReader(entity.getContent()));
+					return jsonResponseEntity;
+				}
+			} else {
+				throw new ServiceException("REST called returned a response code of " +
+						response.getStatusLine().getStatusCode());
 			}
-		} catch (ClientProtocolException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} catch (Throwable t) {
+			throw new ServiceException(t);
 		} finally {
 			if (response != null) {
 				try {
 					EntityUtils.consume(response.getEntity());
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
@@ -271,6 +272,10 @@ public class DefaultApplicationDirectorRestProvider implements ApplicationDirect
 		configureClientToIgnoreSSLCertificate();
 	}
 
+	/*
+	 * Configure the HttpClient to accept the SSL certificate and
+	 * allow any hostname to be present in that certificate.
+	 */
 	private void configureClientToIgnoreSSLCertificate()
 			throws NoSuchAlgorithmException, KeyManagementException {
 		
