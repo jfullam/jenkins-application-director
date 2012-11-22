@@ -234,6 +234,10 @@ public class ApplicationDirectorPostBuildDeployer extends BuildWrapper {
 		private String appDirBaseURI;
 		private String userName;
 		private String password;
+		
+		public Descriptor() {
+			load();
+		}
 
 		@Override
 		public boolean isApplicable(AbstractProject<?, ?> item) {

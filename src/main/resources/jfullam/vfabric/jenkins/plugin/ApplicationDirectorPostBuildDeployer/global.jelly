@@ -3,7 +3,7 @@
 	Allows global configuration of the Application Director instance to be used by
 	 individual jobs for application provisioning and release management.
   -->
-  <f:section title="Application Director Post Build Plugin">
+  <f:section title="Application Director Post Build Plugin" name="vfabric">
     <f:entry title="URI Base" field="appDirBaseURI"
       description="The base Application Director API URI (ie https://vfabric-ad:8443/darwin/api/1.0)">
       <f:textbox />
