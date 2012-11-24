@@ -8,13 +8,26 @@
 			against? -->
 	</parent>
 
-	<groupId>jfullam.vfabric.jenkins</groupId>
-	<artifactId>applicationDirector</artifactId>
+	<artifactId>application-director-plugin</artifactId>
 	<version>1.0-SNAPSHOT</version>
 	<packaging>hpi</packaging>
+	<name>vFabric Application Director Plugin</name>
+	<description>Integrates Jenkins to vFabric Application Director</description>
+	<url>https://wiki.jenkins-ci.org/display/JENKINS/vFabric+Application+Director+Plugin</url>
+	<licenses>
+		<license>
+			<name>MIT license</name>
+			<comments>All source code is under the MIT license.</comments>
+		</license>
+	</licenses>
 
-	<!-- get every artifact through repo.jenkins-ci.org, which proxies all the 
-		artifacts that we need -->
+	<distributionManagement>
+		<repository>
+			<id>maven.jenkins-ci.org</id>
+			<url>http://maven.jenkins-ci.org:8081/content/repositories/releases/</url>
+		</repository>
+	</distributionManagement>
+
 	<repositories>
 		<repository>
 			<id>repo.jenkins-ci.org</id>
@@ -40,6 +53,16 @@
 			<url>http://repo.jenkins-ci.org/public/</url>
 		</pluginRepository>
 	</pluginRepositories>
+
+	<developers>
+		<developer>
+			<id>jfullam</id>
+			<name>Jonathan Fullam</name>
+			<email>jonathanfullam@gmail.com</email>
+		</developer>
+	</developers>
+
+
 	<build>
 		<pluginManagement>
 			<plugins>
@@ -134,5 +157,11 @@
 			<scope>runtime</scope>
 		</dependency>
 	</dependencies>
+
+	<scm>
+		<connection>scm:git:ssh://github.com/jenkinsci/application-director-plugin.git</connection>
+		<developerConnection>scm:git:ssh://git@github.com/jenkinsci/application-director-plugin.git</developerConnection>
+		<url>https://github.com/jenkinsci/application-director-plugin</url>
+	</scm>
 
 </project>
